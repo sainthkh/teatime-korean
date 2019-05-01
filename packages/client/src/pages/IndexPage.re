@@ -17,7 +17,7 @@ let make = () => {
     <div className="index-header">
       <div className="message">
         <h1>{ReasonReact.string("Teatime Korean")}</h1>
-        <h2>{ReasonReact.string("You won't forget Korean language you learned.")}</h2>
+        <h2>{ReasonReact.string("Solve Korean language quizzes. Never forget what you learned.")}</h2>
       </div>
       <Deck deck />
     </div>
