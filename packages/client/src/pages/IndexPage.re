@@ -1,3 +1,16 @@
+let deck: QuizData.deck = {
+  quizzes: [|
+    MultipleChoice({
+      question: "Which ending is more polite?",
+      answer: 2,
+      choices: [|
+        {j|-요|j},
+        {j|-ㅂ니다|j},
+      |],
+    })
+  |],
+};
+
 [@react.component]
 let make = () => {
   <>
@@ -6,7 +19,7 @@ let make = () => {
         <h1>{ReasonReact.string("Teatime Korean")}</h1>
         <h2>{ReasonReact.string("You won't forget Korean language you learned.")}</h2>
       </div>
-      <Quiz />
+      <Deck deck />
     </div>
     <div className="index-bottom">
       <h2>{ReasonReact.string("Wanna learn Korean with more quizzes?")}</h2>
