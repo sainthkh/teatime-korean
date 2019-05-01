@@ -1,6 +1,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const outputDir = path.join(__dirname, 'build/');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const Fiber = require('fibers');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -10,6 +12,24 @@ module.exports = {
   output: {
     path: outputDir,
     filename: 'Index.js'
+  },
+  module: {
+    rules: [{
+      test: /\.scss$/,
+      use: [{
+        loader: process.env.NODE_ENV !== 'production' 
+          ? 'style-loader' 
+          : MiniCssExtractPlugin.loader,
+      }, {
+        loader: 'css-loader'
+      }, {
+        loader: 'sass-loader',
+        options: {
+          implementation: require('sass'),
+          fiber: Fiber,
+        }
+      }]
+    }]
   },
   plugins: [
     new HtmlWebpackPlugin({

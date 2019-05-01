@@ -1,3 +1,5 @@
+[%%raw {|require("./styles.scss")|}]
+
 [@react.component]
 let make = () => {
   let url = ReasonReactRouter.useUrl();
@@ -5,8 +7,7 @@ let make = () => {
   let page = () => {
     switch(url.path) {
     | [] | [""] | ["/"] => <IndexPage />
-    | ["thankyou"] => <ThankyouPage />
-    | _ => <Error404Page />
+    | _ => <IndexPage />
     };
   };
 
