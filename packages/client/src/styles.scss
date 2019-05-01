@@ -197,3 +197,19 @@ h5 {
     }
   }
 }
+
+.join-waitlist {
+  color: black;
+
+  .subhead {
+    margin-top: 8px;
+    font-size: 14px;
+    @media screen and (min-width: 768px) {
+      font-size: 21px;
+    }
+  }
+
+  .warning {
+    font-size: 14px;
+  }
+}
