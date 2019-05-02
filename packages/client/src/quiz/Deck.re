@@ -26,7 +26,6 @@ let make = (~deck: QuizData.deck) => {
         <h3>{ReasonReact.string("Did you like it? Do you want more?")}</h3>
         <p className="subhead">{ReasonReact.string("If so, please join the waitlist.")}</p>
         <button className="btn">{ReasonReact.string("Let me in")}</button>
-        <p className="warning">{ReasonReact.string("NOTE: I'm currently validating this idea. If there is not enough people in waitlist, I might not continue this project.")}</p>
       </div>
     }
     }}
