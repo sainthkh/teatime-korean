@@ -1,8 +1,9 @@
 [@react.component]
 let make = (
   ~quiz: QuizData.quiz,
-  ~answer
+  ~answer,
+  ~showAnswer
 ) => 
   switch(quiz) {
-  | QuizData.MultipleChoice(d) => <MultipleChoice data=d answer />
+  | QuizData.MultipleChoice(d) => <MultipleChoice data=d answer showAnswer />
   }

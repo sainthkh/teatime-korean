@@ -9,22 +9,20 @@ type action =
 [@react.component]
 let make = (
   ~data: QuizData.multipleChoice,
-  ~answer
+  ~answer,
+  ~showAnswer
 ) => {
   let (state, dispatch) = React.useReducer((_state, action) => {
     switch(action) {
     | Click(num) => { clicked: num }
     }
   }, {clicked: -1});
-  let showAnswer = () => state.clicked != -1;
 
   <>
-    <div className="question">
-      {ReasonReact.string(data.question)}
-    </div>
+    <Question text=data.question />
     <div className="choices">
       {data.choices |> Array.mapi((i, choice: string) => {
-        switch(showAnswer()) {
+        switch(showAnswer) {
         | false => {
           <button 
             key=string_of_int(i)
@@ -61,7 +59,7 @@ let make = (
       }) |> ReasonReact.array}
     </div>
     {
-      showAnswer()
+      showAnswer
       ? {
         <div className="result">
           <div className="message">
