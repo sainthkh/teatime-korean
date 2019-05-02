@@ -63,9 +63,17 @@ let make = (
     {
       showAnswer()
       ? {
-        <div className="explanation">
-          <div className="title">{ReasonReact.string({j|✏️ Explanation|j})}</div>
-          <p>{ReasonReact.string(data.explanation)}</p>
+        <div className="result">
+          <div className="message">
+            {state.clicked == data.answer 
+              ? ReasonReact.string("Correct.")
+              : ReasonReact.string("Wrong.")
+            }
+          </div>
+          <div className="explanation">
+            <div className="title">{ReasonReact.string({j|✏️ Explanation|j})}</div>
+            <p>{ReasonReact.string(data.explanation)}</p>
+          </div>
         </div>
       }
       : ReasonReact.null

@@ -33,7 +33,9 @@ let make = (~deck: QuizData.deck) => {
     
     {
       state.answered
-      ? <div><button onClick={_ => dispatch(Next)}>{ReasonReact.string("Next")}</button></div>
+      ? <div className="next-btn-wrap">
+          <button className="next-btn" onClick={_ => dispatch(Next)}>{ReasonReact.string("Next")}</button>
+        </div>
       : ReasonReact.null
     }
   </div>
