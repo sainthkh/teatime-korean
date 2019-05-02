@@ -6,6 +6,8 @@ $secondary-light: #ffbd45;
 $secondary-white: #fff3e0;
 $secondary-white2: #ffe0b2;
 $secondary-dark: #c25e00;
+$correct: #1B5E20;
+$wrong: #B71C1C;
 $accent: #f06292;
 $background: #e0f2f1;
 $grey: #d8d9e0;
@@ -192,6 +194,33 @@ h5 {
     &:hover {
       background: $secondary-white2;
       cursor: pointer;
+    }
+
+    &.correct, &.wrong, &.gray {
+      box-shadow: none;
+    }
+
+    &.correct {
+      background: $correct;
+    }
+
+    &.wrong {
+      background: $wrong;
+    }
+
+    &.gray{
+      background: $grey;
+    }
+  }
+
+  .explanation {
+    background: $secondary;
+    padding: 16px 8px;
+    margin: 20px 0;
+    border-radius: 5px;
+
+    .title {
+      font-weight: 700;
     }
   }
 }

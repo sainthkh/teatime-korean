@@ -2,11 +2,12 @@ let deck: QuizData.deck = {
   quizzes: [|
     MultipleChoice({
       question: "Which ending is more polite?",
-      answer: 2,
+      answer: 1,
       choices: [|
         {j|-요|j},
         {j|-ㅂ니다|j},
       |],
+      explanation: {j|Use -ㅂ니다 when you want to be more polite.|j},
     })
   |],
 };
