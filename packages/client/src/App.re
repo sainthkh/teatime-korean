@@ -7,6 +7,7 @@ let make = () => {
   let page = () => {
     switch(url.path) {
     | [] | [""] | ["/"] => <IndexPage />
+    | ["register"] => <RegisterPage />
     | _ => <IndexPage />
     };
   };

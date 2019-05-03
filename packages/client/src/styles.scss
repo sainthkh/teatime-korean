@@ -270,3 +270,54 @@ h5 {
     font-size: 14px;
   }
 }
+
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    text-align: center;
+  }
+
+  p {
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  label {
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  input {
+    height: 40px;
+    margin-bottom: 12px;
+    font-size: 24px;
+  }
+
+  button {
+    display: block;
+    background: $accent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 8px 16px;
+    box-shadow: 1px 1px 2px 0px rgba(158,158,158,1);
+    cursor: pointer;
+
+    &:hover, &:active {
+      background-color: darken($accent, 10%);
+    }
+
+    @media screen and (min-width: 768px) {
+      font-size: 24px;
+    }
+  }
+}
