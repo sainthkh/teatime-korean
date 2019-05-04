@@ -5,4 +5,11 @@ authors = ["sainthkh <sainthkh@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-actix-web = "0.7"
+actix-web = "1.0.0-beta.2"
+env_logger = "0.6.1"
+futures = "0.1.26"
+serde = "1.0.90"
+serde_json = "1.0.39"
+serde_derive = "1.0.90"
+juniper = "0.11.1"
+juniper-from-schema = "0.1.5"
