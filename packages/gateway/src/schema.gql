@@ -1,0 +1,7 @@
+type Query {
+  signup(email: String!, password: String!): SignupResponse
+}
+
+type SignupResponse {
+  success: Boolean!
+}
