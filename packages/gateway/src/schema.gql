@@ -1,7 +1,25 @@
-type Mutation {
-  signup(email: String!, password: String!): SignupResponse
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  "#[ownership(owned)]"
+  dummy: Boolean!
+}
+
+enum SignupResult {
+  SUCCESS
+  DUPLICATE_EMAIL
+  WEAK_PASSWORD
 }
 
 type SignupResponse {
   success: Boolean!
+  errors: [SignupResult!]!
+}
+
+type Mutation {
+  "#[ownership(owned)]"
+  signup(email: String!, password: String!): SignupResponse!
 }
