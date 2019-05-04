@@ -1,13 +1,13 @@
-extern crate actix_web;
-use actix_web::{server, App, HttpRequest};
+use actix_web::{web, App, Responder, HttpServer};
 
-fn index(_req: &HttpRequest) -> &'static str {
-    "Hello world!"
+fn index(info: web::Path<(String, u32)>) -> impl Responder {
+    format!("Hello {}! id:{}", info.0, info.1)
 }
 
-fn main() {
-    server::new(|| App::new().resource("/", |r| r.f(index)))
-        .bind("127.0.0.1:8088")
-        .unwrap()
-        .run();
+fn main() -> std::io::Result<()> {
+    HttpServer::new(|| App::new().service(
+        web::resource("/{name}/{id}/index.html").to(index))
+    )
+        .bind("127.0.0.1:8080")?
+        .run()
 }
