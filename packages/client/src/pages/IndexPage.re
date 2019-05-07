@@ -100,7 +100,7 @@ let make = () => {
     <div className="index-bottom">
       <h2>{ReasonReact.string("Wanna learn Korean with more quizzes?")}</h2>
       <div className="join-button-wrap">
-        <button className="btn">{ReasonReact.string("Join the waitlist")}</button>
+        <NavButton href="/register" className="btn">{ReasonReact.string("Join the waitlist")}</NavButton>
       </div>
     </div>
   </>

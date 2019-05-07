@@ -30,7 +30,7 @@ let make = (~deck: QuizData.deck) => {
       <div className="join-waitlist">
         <h3>{ReasonReact.string("Did you like it? Do you want more?")}</h3>
         <p className="subhead">{ReasonReact.string("If so, please join the waitlist.")}</p>
-        <button className="btn">{ReasonReact.string("Let me in")}</button>
+        <NavButton href="/register" className="btn">{ReasonReact.string("Let me in")}</NavButton>
       </div>
     }
     }}
