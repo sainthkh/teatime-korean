@@ -4,7 +4,8 @@ use std::sync::Arc;
 //#[macro_use]
 extern crate juniper;
 
-use actix_web::{middleware, web, App, Error, HttpResponse, HttpServer};
+use actix_web::middleware::cors::Cors;
+use actix_web::{http, middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::future::Future;
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
@@ -130,6 +131,14 @@ fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(state.clone())
+            .wrap(
+                Cors::new()
+                    .allowed_origin("http://localhost:8000")
+                    .allowed_methods(vec!["GET", "POST"])
+                    .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+                    .allowed_header(http::header::CONTENT_TYPE)
+                    .max_age(3600)
+            )
             .wrap(middleware::Logger::default())
             .service(web::resource("/graphql").route(web::post().to_async(graphql)))
             .service(web::resource("/graphiql").route(web::get().to(graphiql)))
