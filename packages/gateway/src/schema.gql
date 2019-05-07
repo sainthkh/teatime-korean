@@ -5,7 +5,7 @@ schema {
 
 type Query {
   "#[ownership(owned)]"
-  dummy: Boolean!
+  duplicateEmail(email: String!): Boolean!
 }
 
 enum SignupError {

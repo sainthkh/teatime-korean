@@ -40,11 +40,12 @@ impl juniper::Context for Context {}
 pub struct Query;
 
 impl QueryFields for Query {
-    fn field_dummy(
+    fn field_duplicate_email(
         &self,
-        _executor: &juniper::Executor<'_, Context>
+        executor: &juniper::Executor<'_, Context>,
+        email: String,
     ) -> juniper::FieldResult<bool> {
-        Ok(true)
+        Ok(executor.context().check_duplicate_email(&email))
     }
 }
 
@@ -121,7 +122,7 @@ pub struct State {
 }
 
 fn graphiql() -> HttpResponse {
-    let html = graphiql_source("http://127.0.0.1:8080/graphql");
+    let html = graphiql_source("http://localhost:8080/graphql");
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(html)
@@ -164,7 +165,9 @@ fn main() -> io::Result<()> {
             .data(state.clone())
             .wrap(
                 Cors::new()
-                    .allowed_origin("http://localhost:8000")
+                    // For development
+                    .allowed_origin("http://localhost:8000") 
+                    .allowed_origin("http://localhost:8080")
                     .allowed_methods(vec!["GET", "POST"])
                     .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
                     .allowed_header(http::header::CONTENT_TYPE)
