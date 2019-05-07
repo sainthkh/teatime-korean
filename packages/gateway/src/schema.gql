@@ -8,15 +8,14 @@ type Query {
   dummy: Boolean!
 }
 
-enum SignupResult {
-  SUCCESS
+enum SignupError {
   DUPLICATE_EMAIL
   WEAK_PASSWORD
 }
 
 type SignupResponse {
   success: Boolean!
-  errors: [SignupResult!]!
+  errors: [SignupError!]!
 }
 
 type Mutation {

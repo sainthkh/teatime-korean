@@ -22,6 +22,19 @@ graphql_schema_from_file!("src/schema.gql");
 pub struct Context {
     db: mongodb::db::Database,
 }
+
+impl Context {
+    fn check_duplicate_email(&self, email: &String) -> bool {
+        let user = 
+            self.db.collection("users").find_one(Some(doc!{"_id": email}), None)
+            .expect("Failed to load user");
+        match user {
+        | Some(_d) => true,
+        | None => false,
+        }
+    }
+}
+
 impl juniper::Context for Context {}
 
 pub struct Query;
@@ -46,26 +59,44 @@ impl MutationFields for Mutation {
         password: String,
     ) -> juniper::FieldResult<SignupResponse> {
         let context = executor.context();
-        let pwh = pwhash::pwhash(password.as_bytes(), 
-            pwhash::OPSLIMIT_INTERACTIVE,
-            pwhash::MEMLIMIT_INTERACTIVE
-        ).unwrap();
-        context.db.collection("users").insert_one(doc!{
-            "_id": email,
-            "password": base64::encode(&pwh[..]),
-        }, None)
-        .expect("Failed to save a new user data.");
 
-        Ok(SignupResponse {
-            success: true,
-            errors: [].to_vec(),
-        })
+        let mut errors = Vec::new();
+
+        if context.check_duplicate_email(&email) {
+            errors.push(SignupError::DuplicateEmail);
+        }
+
+        if password.len() < 8 {
+            errors.push(SignupError::WeakPassword);
+        }
+
+        if errors.len() == 0 {
+            let pwh = pwhash::pwhash(password.as_bytes(), 
+                pwhash::OPSLIMIT_INTERACTIVE,
+                pwhash::MEMLIMIT_INTERACTIVE
+            ).unwrap();
+            context.db.collection("users").insert_one(doc!{
+                "_id": &email,
+                "password": base64::encode(&pwh[..]),
+            }, None)
+            .expect("Failed to save a new user data.");
+
+            Ok(SignupResponse {
+                success: true,
+                errors: [].to_vec(),
+            })
+        } else {
+            Ok(SignupResponse {
+                success: false,
+                errors,
+            })
+        }
     }
 }
 
 pub struct SignupResponse {
     success: bool,
-    errors: Vec<SignupResult>,
+    errors: Vec<SignupError>,
 }
 
 impl SignupResponseFields for SignupResponse {
@@ -79,7 +110,7 @@ impl SignupResponseFields for SignupResponse {
     fn field_errors(
         &self, 
         _executor: &juniper::Executor<'_, Context>
-    ) -> juniper::FieldResult<&Vec<SignupResult>> {
+    ) -> juniper::FieldResult<&Vec<SignupError>> {
         Ok(&self.errors)
     }
 }
