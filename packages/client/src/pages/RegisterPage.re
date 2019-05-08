@@ -2,21 +2,23 @@ type state = {
   email: string,
   password: string,
   shouldNotBeEmpty: bool,
-  weakPassword: bool,
   duplicateEmail: bool,
+  weakPassword: bool,
   waitForSignup: bool,
+  errorsShouldBeFixed: bool,
   thankyou: bool,
 };
 
 type action = 
   | UpdateEmail(string)
   | EmptyEmailField(bool)
+  | DuplicateEmail(bool)
   | UpdatePassword(string)
   | WeakPassword(bool)
-  | DuplicateEmail(bool)
   | WaitForSignup
   | Finished
   | ServerError(array(EnumTypes.signupError))
+  | ErrorsShouldBeFixed
   ;
 
 let duplicateEmail = ReasonQL.gql({|
@@ -59,8 +61,10 @@ let make = () => {
       weakPassword: String.length(state.password) < 8,
       duplicateEmail: Array.to_list(errors) |> List.exists(a => a == EnumTypes.DuplicateEmail),
       waitForSignup: false,
+      errorsShouldBeFixed: false,
     }
     | Finished => { ...state, thankyou: true }
+    | ErrorsShouldBeFixed => { ...state, errorsShouldBeFixed: true }
     }
   }, {
     email: "",
@@ -69,6 +73,7 @@ let make = () => {
     weakPassword: false,
     duplicateEmail: false,
     waitForSignup: false,
+    errorsShouldBeFixed: false,
     thankyou: false,
   });
 
@@ -131,19 +136,32 @@ let make = () => {
       {
         state.waitForSignup
         ? <div>{ReasonReact.string("Please wait.")}</div>
-        : <button onClick={event => {
-          event->ReactEvent.Synthetic.preventDefault;
-          if(!state.shouldNotBeEmpty && !state.weakPassword && !state.duplicateEmail) {
-            dispatch(WaitForSignup)
-            Signup.send({ email: state.email, password: state.password })
-            ->Signup.finished(data => {
-              switch(Array.length(data.signup.errors)) {
-              | 0 => dispatch(Finished)
-              | _ => dispatch(ServerError(data.signup.errors))
-              }
-            })
-          }
-        }}>{ReasonReact.string("Let me in")}</button>
+        : <>
+            <button 
+              onClick={event => {
+                event->ReactEvent.Synthetic.preventDefault;
+                if(!state.shouldNotBeEmpty && !state.weakPassword && !state.duplicateEmail) {
+                  dispatch(WaitForSignup)
+                  Signup.send({ email: state.email, password: state.password })
+                  ->Signup.finished(data => {
+                    switch(Array.length(data.signup.errors)) {
+                    | 0 => dispatch(Finished)
+                    | _ => dispatch(ServerError(data.signup.errors))
+                    }
+                  })
+                } else {
+                  dispatch(ErrorsShouldBeFixed);
+                }
+              }}
+            >
+              {ReasonReact.string("Let me in")}
+            </button>
+            {
+              state.errorsShouldBeFixed 
+              ? <div className="form-error">{ReasonReact.string("Errors should be fixed.")}</div>
+              : ReasonReact.null
+            }
+          </>
       }
     </form>
   </div>
