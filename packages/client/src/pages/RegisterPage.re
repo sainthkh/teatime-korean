@@ -79,90 +79,101 @@ let make = () => {
 
   <div className="register-page">
     <form className="register-form" method="POST">
-      <h1>{ReasonReact.string("Join the Waitlist")}</h1>
-      <p>{ReasonReact.string("I'll send you a notice when the site opens.")}</p>
-      <div className="label-wrap">
-        <label htmlFor="sign-up-form-email">{ReasonReact.string("email")}</label>
-        { 
-          state.duplicateEmail 
-          ? <div className="form-error">{ReasonReact.string("is already taken.")}</div>
-          : ReasonReact.null
-        }
-        {
-          state.shouldNotBeEmpty
-          ? <div className="form-error">{ReasonReact.string("shouldn't be empty.")}</div>
-          : ReasonReact.null
-        }
-      </div>
-      <input 
-        type_="email" 
-        id="sign-up-form-email" 
-        value=state.email 
-        onChange={event => {
-          let value = event->ReactEvent.Form.target##value;
-          dispatch(UpdateEmail(value));
-        }}
-        onBlur={_ => {
-          switch(String.length(state.email)) {
-          | 0 => dispatch(EmptyEmailField(true))
-          | _ => {
-            dispatch(EmptyEmailField(false))
-            CheckDuplicate.send({ email: state.email })
-            ->CheckDuplicate.finished(data => {
-              dispatch(DuplicateEmail(data.duplicateEmail))
-            });
+    {
+      state.thankyou 
+      ?
+      <> 
+        <h1>{ReasonReact.string("Thank you for signing up.")}</h1>
+        <p>{ReasonReact.string("I'll do my best to open soon.")}</p>
+      </>
+      : 
+      <>
+        <h1>{ReasonReact.string("Join the Waitlist")}</h1>
+        <p>{ReasonReact.string("I'll send you a notice when the site opens.")}</p>
+        <div className="label-wrap">
+          <label htmlFor="sign-up-form-email">{ReasonReact.string("email")}</label>
+          { 
+            state.duplicateEmail 
+            ? <div className="form-error">{ReasonReact.string("is already taken.")}</div>
+            : ReasonReact.null
           }
+          {
+            state.shouldNotBeEmpty
+            ? <div className="form-error">{ReasonReact.string("shouldn't be empty.")}</div>
+            : ReasonReact.null
           }
-        }}
-      />
-      <div className="label-wrap">
-        <label htmlFor="sign-up-form-password">{ReasonReact.string("password")}</label>
-        {
-          state.weakPassword
-          ? <div className="form-error">{ReasonReact.string("must be at least 8 characters.")}</div>
-          : ReasonReact.null
-        }
-      </div>
-      <input 
-        type_="password" 
-        id="sign-up-form-password" 
-        value=state.password 
-        onChange={event => {
-          let value = event->ReactEvent.Form.target##value;
-          dispatch(UpdatePassword(value));
-        }}
-        onBlur={_ => dispatch(WeakPassword(String.length(state.password) < 8)) } 
-      />
-      {
-        state.waitForSignup
-        ? <div>{ReasonReact.string("Please wait.")}</div>
-        : <>
-            <button 
-              onClick={event => {
-                event->ReactEvent.Synthetic.preventDefault;
-                if(!state.shouldNotBeEmpty && !state.weakPassword && !state.duplicateEmail) {
-                  dispatch(WaitForSignup)
-                  Signup.send({ email: state.email, password: state.password })
-                  ->Signup.finished(data => {
-                    switch(Array.length(data.signup.errors)) {
-                    | 0 => dispatch(Finished)
-                    | _ => dispatch(ServerError(data.signup.errors))
-                    }
-                  })
-                } else {
-                  dispatch(ErrorsShouldBeFixed);
-                }
-              }}
-            >
-              {ReasonReact.string("Let me in")}
-            </button>
-            {
-              state.errorsShouldBeFixed 
-              ? <div className="form-error">{ReasonReact.string("Errors should be fixed.")}</div>
-              : ReasonReact.null
+        </div>
+        <input 
+          type_="email" 
+          id="sign-up-form-email" 
+          value=state.email 
+          onChange={event => {
+            let value = event->ReactEvent.Form.target##value;
+            dispatch(UpdateEmail(value));
+          }}
+          onBlur={_ => {
+            switch(String.length(state.email)) {
+            | 0 => dispatch(EmptyEmailField(true))
+            | _ => {
+              dispatch(EmptyEmailField(false))
+              CheckDuplicate.send({ email: state.email })
+              ->CheckDuplicate.finished(data => {
+                dispatch(DuplicateEmail(data.duplicateEmail))
+              });
             }
-          </>
-      }
+            }
+          }}
+        />
+        <div className="label-wrap">
+          <label htmlFor="sign-up-form-password">{ReasonReact.string("password")}</label>
+          {
+            state.weakPassword
+            ? <div className="form-error">{ReasonReact.string("must be at least 8 characters.")}</div>
+            : ReasonReact.null
+          }
+        </div>
+        <input 
+          type_="password" 
+          id="sign-up-form-password" 
+          value=state.password 
+          onChange={event => {
+            let value = event->ReactEvent.Form.target##value;
+            dispatch(UpdatePassword(value));
+          }}
+          onBlur={_ => dispatch(WeakPassword(String.length(state.password) < 8)) } 
+        />
+        {
+          state.waitForSignup
+          ? <div>{ReasonReact.string("Please wait.")}</div>
+          : <>
+              <button 
+                onClick={event => {
+                  event->ReactEvent.Synthetic.preventDefault;
+                  if(!state.shouldNotBeEmpty && !state.weakPassword && !state.duplicateEmail) {
+                    dispatch(WaitForSignup)
+                    Signup.send({ email: state.email, password: state.password })
+                    ->Signup.finished(data => {
+                      switch(Array.length(data.signup.errors)) {
+                      | 0 => dispatch(Finished)
+                      | _ => dispatch(ServerError(data.signup.errors))
+                      }
+                    })
+                  } else {
+                    dispatch(ErrorsShouldBeFixed);
+                  }
+                }}
+              >
+                {ReasonReact.string("Let me in")}
+              </button>
+              {
+                state.errorsShouldBeFixed 
+                ? <div className="form-error">{ReasonReact.string("Errors should be fixed.")}</div>
+                : ReasonReact.null
+              }
+            </>
+        }
+      </>
+    }
     </form>
   </div>
 };
