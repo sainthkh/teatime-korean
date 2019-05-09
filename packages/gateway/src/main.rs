@@ -8,6 +8,7 @@ extern crate chrono;
 use actix_web::middleware::cors::Cors;
 use actix_web::{http, middleware, web, App, Error, HttpResponse, HttpServer};
 use futures::future::Future;
+#[cfg(feature="graphiql")]
 use juniper::http::graphiql::graphiql_source;
 use juniper::http::GraphQLRequest;
 
@@ -125,11 +126,19 @@ pub struct State {
     context: Context,
 }
 
+#[cfg(feature="graphiql")]
 fn graphiql() -> HttpResponse {
     let html = graphiql_source("http://localhost:8080/graphql");
     HttpResponse::Ok()
         .content_type("text/html; charset=utf-8")
         .body(html)
+}
+
+#[cfg(not(feature="graphiql"))]
+fn graphiql() -> HttpResponse {
+    HttpResponse::Ok()
+        .content_type("text/html; charset=utf-8")
+        .body("")
 }
 
 fn graphql(
