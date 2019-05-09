@@ -230,8 +230,16 @@ h5 {
     padding: 16px 8px;
     border-radius: 5px;
 
-    .title {
+    .title, .learn-more {
       font-weight: 700;
+    }
+
+    ul {
+      margin: 0;
+
+      a {
+        color: white;
+      }
     }
   }
 

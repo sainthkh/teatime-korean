@@ -71,6 +71,12 @@ let make = (
           <div className="explanation">
             <div className="title">{ReasonReact.string({j|✏️ Explanation|j})}</div>
             <p>{ReasonReact.string(data.explanation)}</p>
+            <div className="learn-more">{ReasonReact.string({j|📚 Learn More|j})}</div>
+            <ul>
+              {data.sources |> Array.mapi((i, source:QuizData.source) => {
+                <li key=string_of_int(i)><a href=source.url target="_blank">{ReasonReact.string(source.name)}</a></li>
+              }) |> ReasonReact.array}
+            </ul>
           </div>
         </div>
       }
