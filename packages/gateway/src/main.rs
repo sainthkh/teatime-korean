@@ -3,6 +3,7 @@ use std::sync::Arc;
 
 //#[macro_use]
 extern crate juniper;
+extern crate chrono;
 
 use actix_web::middleware::cors::Cors;
 use actix_web::{http, middleware, web, App, Error, HttpResponse, HttpServer};
@@ -15,6 +16,8 @@ use juniper_from_schema::graphql_schema_from_file;
 use mongodb::{Client as MongoClient, ThreadedClient, doc, bson};
 use mongodb::db::ThreadedDatabase;
 use sodiumoxide::crypto::pwhash;
+
+use chrono::prelude::*;
 
 // This is the important line
 graphql_schema_from_file!("src/schema.gql");
@@ -79,6 +82,7 @@ impl MutationFields for Mutation {
             context.db.collection("users").insert_one(doc!{
                 "_id": &email,
                 "password": base64::encode(&pwh[..]),
+                "signupDate": Utc::now().to_rfc3339(),
             }, None)
             .expect("Failed to save a new user data.");
 
