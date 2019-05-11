@@ -26,6 +26,7 @@
   "devDependencies": {
     "@reasonql/compiler": "^0.1.7",
     "bs-platform": "^5.0.4",
+    "copy-webpack-plugin": "^5.0.3",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
     "fibers": "^4.0.1",

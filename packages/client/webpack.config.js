@@ -4,6 +4,7 @@ const outputDir = path.join(__dirname, 'build/');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserJSPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const Fiber = require('fibers');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -41,6 +42,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: `styles/[name].css`
     }),
+    new CopyPlugin([
+      { from: 'src/server.html', to: 'server.html' },
+    ]),
   ],
   optimization: {
     minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
