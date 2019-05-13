@@ -28,7 +28,7 @@ query CheckDuplicate($email: String!) {
 |});
 
 module CheckDuplicate = ReasonQL.MakeRequest(CheckDuplicate, {
-  let url = "http://localhost:8080/graphql";
+  let url = Config.graphqlUrl();
 });
 
 
@@ -42,7 +42,7 @@ mutation SignupMutation($email: String!, $password: String!) {
 |});
 
 module Signup = ReasonQL.MakeRequest(SignupMutation, {
-  let url = "http://localhost:8080/graphql";
+  let url = Config.graphqlUrl();
 });
 
 [@react.component]
