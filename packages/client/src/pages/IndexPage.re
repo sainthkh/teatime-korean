@@ -140,7 +140,7 @@ let make = () => {
   <>
     <div className="index-header">
       <div className="message">
-        <h1>{ReasonReact.string("Teatime Korean")}</h1>
+        <h1>{ReasonReact.string("Quiz Korean")}</h1>
         <h2>{ReasonReact.string("Solve Korean language quizzes. Never forget what you have learned.")}</h2>
       </div>
       <Deck deck />
