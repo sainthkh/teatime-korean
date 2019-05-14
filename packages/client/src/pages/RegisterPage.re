@@ -78,7 +78,25 @@ let make = () => {
   });
 
   <div className="register-page">
-    <form className="register-form" method="POST">
+    <form 
+      className="register-form" 
+      method="POST" 
+      onSubmit={event => {
+        event->ReactEvent.Synthetic.preventDefault;
+        if(!state.shouldNotBeEmpty && !state.weakPassword && !state.duplicateEmail) {
+          dispatch(WaitForSignup)
+          Signup.send({ email: state.email, password: state.password })
+          ->Signup.finished(data => {
+            switch(Array.length(data.signup.errors)) {
+            | 0 => dispatch(Finished)
+            | _ => dispatch(ServerError(data.signup.errors))
+            }
+          })
+        } else {
+          dispatch(ErrorsShouldBeFixed);
+        }
+      }}
+    >
     {
       state.thankyou 
       ?
@@ -146,23 +164,7 @@ let make = () => {
           state.waitForSignup
           ? <div>{ReasonReact.string("Please wait.")}</div>
           : <>
-              <button 
-                onClick={event => {
-                  event->ReactEvent.Synthetic.preventDefault;
-                  if(!state.shouldNotBeEmpty && !state.weakPassword && !state.duplicateEmail) {
-                    dispatch(WaitForSignup)
-                    Signup.send({ email: state.email, password: state.password })
-                    ->Signup.finished(data => {
-                      switch(Array.length(data.signup.errors)) {
-                      | 0 => dispatch(Finished)
-                      | _ => dispatch(ServerError(data.signup.errors))
-                      }
-                    })
-                  } else {
-                    dispatch(ErrorsShouldBeFixed);
-                  }
-                }}
-              >
+              <button>
                 {ReasonReact.string("Let me in")}
               </button>
               {
