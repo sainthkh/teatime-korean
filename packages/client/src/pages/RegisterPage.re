@@ -101,6 +101,13 @@ let make = () => {
       }}
     >
     {
+      let checkDuplicateEmail = () => {
+        CheckDuplicate.send({ email: state.email })
+        ->CheckDuplicate.finished(data => {
+          dispatch(DuplicateEmail(data.duplicateEmail))
+        });
+      };
+
       state.thankyou 
       ?
       <> 
@@ -136,16 +143,16 @@ let make = () => {
           onChange={event => {
             let value = event->ReactEvent.Form.target##value;
             dispatch(UpdateEmail(value));
+            if (state.duplicateEmail) {
+              checkDuplicateEmail();
+            }
           }}
           onBlur={_ => {
             switch(String.length(state.email)) {
             | 0 => dispatch(EmptyEmailField(true))
             | _ => {
-              dispatch(EmptyEmailField(false))
-              CheckDuplicate.send({ email: state.email })
-              ->CheckDuplicate.finished(data => {
-                dispatch(DuplicateEmail(data.duplicateEmail))
-              });
+              dispatch(EmptyEmailField(false));
+              checkDuplicateEmail();
             }
             }
           }}
