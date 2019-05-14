@@ -4,6 +4,7 @@ use std::sync::Arc;
 //#[macro_use]
 extern crate juniper;
 extern crate chrono;
+extern crate checkmail;
 
 use actix_web::middleware::cors::Cors;
 use actix_web::{http, middleware, web, App, Error, HttpResponse, HttpServer};
@@ -67,8 +68,12 @@ impl MutationFields for Mutation {
 
         let mut errors = Vec::new();
 
-        if context.check_duplicate_email(&email) {
-            errors.push(SignupError::DuplicateEmail);
+        if checkmail::validate_email(&email) {
+            if context.check_duplicate_email(&email) {
+                errors.push(SignupError::DuplicateEmail);
+            }
+        } else {
+            errors.push(SignupError::InvalidEmail)
         }
 
         if password.len() < 8 {

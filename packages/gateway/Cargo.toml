@@ -18,6 +18,7 @@ sodiumoxide = "0.2.1"
 reqwest = "0.9.16"
 base64 = "0.10.1"
 chrono = "0.4.6"
+checkmail = "0.1.1"
 
 [features]
 graphiql = []

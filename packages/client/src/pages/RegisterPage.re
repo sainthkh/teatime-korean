@@ -3,6 +3,7 @@ type state = {
   password: string,
   shouldNotBeEmpty: bool,
   duplicateEmail: bool,
+  invalidEmail: bool,
   weakPassword: bool,
   waitForSignup: bool,
   errorsShouldBeFixed: bool,
@@ -60,6 +61,7 @@ let make = () => {
       shouldNotBeEmpty: String.length(state.email) == 0,
       weakPassword: String.length(state.password) < 8,
       duplicateEmail: Array.to_list(errors) |> List.exists(a => a == EnumTypes.DuplicateEmail),
+      invalidEmail: Array.to_list(errors) |> List.exists(a => a == EnumTypes.InvalidEmail),
       waitForSignup: false,
       errorsShouldBeFixed: false,
     }
@@ -72,6 +74,7 @@ let make = () => {
     shouldNotBeEmpty: false,
     weakPassword: false,
     duplicateEmail: false,
+    invalidEmail: false,
     waitForSignup: false,
     errorsShouldBeFixed: false,
     thankyou: false,
@@ -113,6 +116,11 @@ let make = () => {
           { 
             state.duplicateEmail 
             ? <div className="form-error">{ReasonReact.string("is already taken.")}</div>
+            : ReasonReact.null
+          }
+          { 
+            state.invalidEmail 
+            ? <div className="form-error">{ReasonReact.string("is invalid.")}</div>
             : ReasonReact.null
           }
           {

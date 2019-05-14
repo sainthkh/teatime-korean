@@ -9,6 +9,7 @@ type Query {
 }
 
 enum SignupError {
+  INVALID_EMAIL
   DUPLICATE_EMAIL
   WEAK_PASSWORD
 }
