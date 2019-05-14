@@ -15,7 +15,6 @@ type action =
   | EmptyEmailField(bool)
   | DuplicateEmail(bool)
   | UpdatePassword(string)
-  | WeakPassword(bool)
   | WaitForSignup
   | Finished
   | ServerError(array(EnumTypes.signupError))
@@ -52,8 +51,11 @@ let make = () => {
     switch(action) {
     | UpdateEmail(email) => { ...state, email: email, }
     | EmptyEmailField(err) => { ...state, shouldNotBeEmpty: err, }
-    | UpdatePassword(password) => { ...state, password: password, }
-    | WeakPassword(err) => { ...state, weakPassword: err, }
+    | UpdatePassword(password) => { 
+      ...state, 
+      password: password, 
+      weakPassword: String.length(state.password) < 8,
+    }
     | DuplicateEmail(duplicate) => { ...state, duplicateEmail: duplicate, }
     | WaitForSignup => { ...state, waitForSignup: true, }
     | ServerError(errors) => {
@@ -173,7 +175,6 @@ let make = () => {
             let value = event->ReactEvent.Form.target##value;
             dispatch(UpdatePassword(value));
           }}
-          onBlur={_ => dispatch(WeakPassword(String.length(state.password) < 8)) } 
         />
         {
           state.waitForSignup
