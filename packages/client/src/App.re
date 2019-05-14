@@ -8,6 +8,7 @@ let make = () => {
     switch(url.path) {
     | [] | [""] | ["/"] => <IndexPage />
     | ["register"] => <RegisterPage />
+    | ["thankyou"] => <ThankyouPage />
     | _ => <IndexPage />
     };
   };
